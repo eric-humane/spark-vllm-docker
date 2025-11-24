@@ -32,6 +32,14 @@ docker build \
   -t vllm-node .
 ```
 
+### Copying the container to another Spark node
+
+To avoid extra network overhead, you can copy the image directly to your second Spark node via ConnectX 7 interface by using the following command:
+
+```bash
+docker save vllm-node | ssh your_username@another_spark_hostname_or_ip "docker load"
+```
+
 -----
 
 ## 2\. Running the Container
