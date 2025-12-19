@@ -415,7 +415,15 @@ wait_for_cluster() {
 if [[ "$ACTION" == "exec" ]]; then
     start_cluster
     echo "Executing command on head node: $COMMAND_TO_RUN"
-    docker exec -it "$CONTAINER_NAME" bash -i -c "$COMMAND_TO_RUN"
+    
+    # Check if running in a TTY to avoid "input device is not a TTY" error
+    if [ -t 0 ]; then
+        DOCKER_EXEC_FLAGS="-it"
+    else
+        DOCKER_EXEC_FLAGS="-i"
+    fi
+    
+    docker exec $DOCKER_EXEC_FLAGS "$CONTAINER_NAME" bash -i -c "$COMMAND_TO_RUN"
 elif [[ "$ACTION" == "start" ]]; then
     start_cluster
     if [[ "$DAEMON_MODE" == "true" ]]; then
